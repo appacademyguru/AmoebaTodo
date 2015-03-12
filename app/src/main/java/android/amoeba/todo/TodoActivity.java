@@ -7,6 +7,7 @@ import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.content.Intent;
 import android.widget.Button;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -26,6 +28,7 @@ public class TodoActivity extends Activity {
 
     protected Button addItemButton;
     protected Bundle extras;
+    protected JSONArray jsonTaskArr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,18 +41,12 @@ public class TodoActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), NewItemActivity.class);
-                startActivityForResult(intent, 0);
+                startActivity(intent);
             }
         });
 
 
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        extras = intent.getExtras();
     }
 
     @Override
@@ -73,9 +70,15 @@ public class TodoActivity extends Activity {
 
     @Override
     protected void onPause() {
-        //create tasks here: read in json array
-        JSONArray jsonTaskArr = new JSONArray();
-        jsonTaskArr.put(extras.get("jsonTask"));
-        //jsonTaskArr.put(JsonUtil.toJSon(Task task));
+        if(jsonTaskArr == null){
+            jsonTaskArr = new JSONArray();
+        }
+        try {
+            JSONObject tempObj = new JSONObject(getIntent().getStringExtra("jsonTask"));
+            jsonTaskArr.put(tempObj);
+        }
+        catch(JSONException error){
+            Log.e("TodoActivity", "JSONException" + error);
+        }
     }
 }

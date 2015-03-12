@@ -31,7 +31,7 @@ public class NewItemActivity extends Activity{
         saveItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Task.class);
+                Intent intent = new Intent(getApplicationContext(), TodoActivity.class);
 
 
                 final EditText titleData = (EditText)findViewById(R.id.title);
@@ -65,6 +65,7 @@ public class NewItemActivity extends Activity{
                 JSONObject jsonTask = JsonUtil.toJSon(task);
                 intent.putExtra("jsonTask", jsonTask.toString());
                 System.out.println("Title="+title + " Reminder=" + reminder + " Time=" + time + " Date=" + date);
+                startActivity(intent);
             }
         });
     }
